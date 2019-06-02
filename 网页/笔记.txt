@@ -1,0 +1,19 @@
+网页的基本框架
+<html>
+   <head>
+      <title> 这里面是网页的标题 </title>
+   </head>
+
+   <body> 网页的内容  </body>
+</html>
+
+
+
+
+
+<strong> 重点 </strong>    加粗（重点）
+<em> 强调 </em>    斜体（强调）
+<p> 段中内容 </p>  段落，相当于回车
+&lt；代指小于号，&gt；代指大于号
+&nbsp；代指空格
+<cite>标题</cite>

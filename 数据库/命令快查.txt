@@ -1,0 +1,241 @@
+ sudo service mysql start  启动MySQL
+0.mysql -u root  以root登录
+1.CREATE DATABASE 数据库名;   ##创建数据库
+2.use 数据库名;  ##进入数据库
+3.show tables;  ##显示数据库中的表
+4.show DATABASES;  ##显示数据库
+SHOW STATUS用于显示广泛的服务器状态信息
+SHOW CREATE DATABASE显示创建特定数据库的MySQL语句
+SHOW CREATE TABLE显示创建特定表的MySQL语句
+SHOW GRANTS显示授予用户的安全权限
+SHOW ERRORS和SHOE WARNINGS显示服务器错误与警告
+5.CREATE TABLE 表的名字
+    (
+    列名a 数据类型(数据长度),
+    列名b 数据类型(数据长度)，
+   列名c 数据类型(数据长度)
+    );
+如：CREATE TABLE  表名(id int(10),name char(20),phone int(12));
+6.SELECT * FROM 表名 ; 查看表中的内容
+INSERT   INTO 表的名字(列名a,列名b,列名c) VALUES(值1,值2,值3);
+如：INSERT INTO employee(id,name,phone) 
+       VALUES(01,'Tom',110110110);
+SELECT 列 FROM 表 LIMIT 5;  从表中检索列，但返回不多于5个（就是前5个）
+SELECT 列 FROM 表 LIMIT 5,5;表示返回从行5开始的5行（也就是6~10）
+SELECT 列1 FROM 表 ORDER BY 列2：这是依据列2的排序检索列1，也可以依据多个列排序
+SELECT 列 FROM 表 ORDER BY 列 LIMIT 3;   检索按某个列排序的前三个
+7.删除数据库 DROP DATABASE mysql_shiyan;
+增加一列ALTER TABLE 表名字 ADD 列名字 数据类型 约束;
+  例如ALTER TABLE employee ADD id int(4) DEFAULT 170;
+ALTER TABLE employee ADD weight INT(4) DEFAULT 120 AFTER age;增加一列weight放age后面
+ALTER TABLE employee ADD test INT(10) DEFAULT 11 FIRST;增加一列test放第一列
+删除列ALTER TABLE 表名字 DROP 列名字;
+重命名ALTER TABLE 表名字 CHANGE 原列名 新列名 数据类型 约束;
+	注意：这条重命名语句后面的 “数据类型” 不能省略，否则重命名失败。
+改变列数据类型ALTER TABLE 表名字 MODIFY 列名字 新数据类型;
+WHERE用作过滤条件，在同时使用ORDER BY与WHERE时应该让ORDER BY在WHERE之后
+UPDATE 表名字 SET 列1=值1,列2=值2 WHERE 条件;## 修改表中某个值
+       如：UPDATE employee SET age=21,salary=3000 WHERE name='Tom';
+       注意：一定要有 WHERE 条件，否则会出现你不想看到的后果
+删除一行记录DELETE FROM 表名字 WHERE 条件;
+       如：DELETE FROM employee WHERE name='Tom';
+操作符有：>,<,<>,!=等，还有一个BETWEEN,
+      如a BETWEEN 5 AND 10,表示a列在5到10之间的数
+空值检查WHERE name IS NULL;
+操作符AND与OR一起用的时候，先处理AND再OR，小括号可以改变优先级
+操作符IN（1001,9,10），是指值是这三个的所有列，如WHERE score IN (80,81,83)，与OR异曲同工
+NOT操作符的唯一作用就是否定跟在后面的条件
+对一张表的某列建立索引  CREATE INDEX 索引名 ON 表名字 (列名);
+       如：CREATE INDEX idx_name ON employee (name);
+使用命令 SHOW INDEX FROM 表名字; 查看刚才新建的索引
+创建视图的语句格式为：CREATE VIEW 视图名(列a,列b,列c) AS SELECT 列1,列2,列3 FROM 表名字;
+向表中导入数据：LOAD DATA INFILE '文件路径和文件名' INTO TABLE 表名字;
+导出文件SELECT 列1，列2 INTO OUTFILE '文件路径和文件名' FROM 表名字;
+使用 mysqldump 备份的语句：mysqldump -u root 数据库名>备份文件名;   #备份整个数据库
+       如：mysqldump -u root mysql_shiyan > bak.sql;
+mysqldump -u root 数据库名 表名字>备份文件名;  ##备份整个表
+    注：mysqldump 是一个备份工具，因此该命令是在终端中执行的，而不是在 mysql 交互环境下
+备份恢复：mysql -u root 新建空数据库 < bak.sql
+    注：该命令是在终端中执行的，而不是在 mysql 交互环境下
+通过 mysqladmin 工具修改数据库密码的时候:mysqladmin -uroot -p 123456 password abcdef
+    原密码为：123456
+    新密码为：abcdef
+SELECT VERSION(), CURRENT_DATE;  ##查看当前版本
+如果你决定不想执行正在输入过程中的一个命令，输入\c取消它：
+数据库名称是区分大小写的(不像 SQL 关键字)
+DESCRIBE 表名; ##显示表的大体结构
+LOAD DATA INFILE '/var/lib/mysql-files/pet.txt' INTO TABLE pet；##把txt文件中数据加载到表
+如果你愿意，你能明确地在 LOAD DATA 语句中指出列值的分隔符和行尾标记
+   如，自定义字段间分隔符为逗号,LOAD DATA INFILE '/var/lib/mysql-files/pet.txt' 
+                                INTO TABLE 表名 FIELDS TERMINATED BY ',';
+表中某一数据错误要进行更正UPDATE 表名 SET 列名=更正值 WHERE name = 'Bowser';
+   如：UPDATE pet SET birth = '1989-08-31' WHERE name = 'Bowser';
+SELECT name, birth FROM pet ORDER BY birth DESC;  ##从表pet中取出name，birth列且按照birth降序排序
+日期计算：SELECT name, birth, CURDATE(),TIMESTAMPDIFF(YEAR,birth,CURDATE()) AS age FROM pet;
+          注解：TIMESTAMPDIFF(YEAR,birth,CURDATE())是一个根据birth中与当前时间数据计算时间差取出年数的函数
+         几个常用函数YEAR(birth) 提取日期的年数，RIGHT(字符，6) 提取日期最右面6个字符
+         MONTH()提取日期的月数和DAYOFMONTH()提取日期的日数
+查询使用death IS NOT NULL而非death != NULL，因为NULL是特殊的值，不能使用普通比较符来比较。
+模式匹配：SELECT * FROM pet WHERE name LIKE '%fy';##找出以fy结尾的名字的数据，遵循正则表达式
+	.匹配任何单个的字符。
+	[...]匹配在方括号内的任何字符。例如，[abc]匹配“a”、“b”或“c”。
+	为了命名字符的范围，使用一个“-”。“[a-z]”匹配任何字母，而“[0-9]”匹配任何数字。
+	 ”匹配零个或多个在它前面的东西。如“x*”匹配任何数量的“x”字符，“[0-9]*”匹配的任何数量的数字。
+	“.*”匹配任何数量的任何东西。
+COUNT(*)函数计算行数
+Upper（）函数是将小写转化为大写
+Left()函数是返回串左边的字符
+Length()返回串的长度
+Locate()找出串的一个子串
+Lower()将串装化为小写
+LTrim()去掉串左边的空格
+Right()返回串右边的字符
+RTrim()去掉串右边的空格
+Soundex()返回串的SOUNDEX值  注：需要对SOUNDEX进一步解释，SOUNDEX是一个将任何文本串转化为描述其语音表示的字母
+                                数字模式的算法，SOUNDEX考虑了类似的发音字符与音节，使得能对串进行发音比较而
+				不是字母比较，用于读音相似的搜索
+SubString()返回子串的字符
+下面是一些时间操作函数
+Date（）返回日期时间中的日期部分
+其他时间函数放到了笔记中
+数值处理函数
+Abs()返回绝对值   ；Cos()返回一个角度的余弦；Exp()返回一个数的指数值；Mod()返回操作的余数
+Pi()返回圆周率；Rand()返回一个随机数；Sin()正弦；Sqrt()返回一个数的平方根；Tan()正切
+为了找出当前选择了哪个数据库，使用DATABASE()函数：
+      如SELECT DATABASE();
+MAX() 函数计算物品号ar最大值：
+查询某列最大值所在行SELECT article, dealer, price
+    			-> FROM shop
+    			-> ORDER BY price DESC
+    			-> LIMIT 1;
+GROUP BY article;##依据article进行分组
+	例如：找出每项物品中对应出价最高价格
+		SELECT article, MAX(price) AS price
+    	    	-> FROM shop
+   	    	-> GROUP BY article;
+UNION 用于合并两个或多个 SELECT 语句的结果集，并消去表中任何重复行。
+BIT_COUNT函数计算每个月中某用户访问网页的天数：
+AUTO_INCREMENT可以自动生成数据，默认从1开始
+	例如：CREATE TABLE animals (
+    		id MEDIUMINT NOT NULL AUTO_INCREMENT,
+    		name CHAR(30) NOT NULL,
+    		PRIMARY KEY (id));
+用0x数字   来表示16进制，与单片机一样
+十六进制值的默认类型是字符串。如果想要确保该值能作为数字处理，可以使用 CAST(...AS UNSIGNED)：
+HEX() 函数将一个字符串或数字转换为十六进制格式的字符串：
+使用 b'value' 符号表达位域型，如a=b'1011100',则a就是二进制的1011100
+	如CREATE TABLE t (b BIT(8));
+	  INSERT INTO t SET b = b'11111111';
+	  INSERT INTO t SET b = b'1010';
+识别符的引用符是反勾号(‘`’)：如SELECT * FROM `select` WHERE `select`.id > 100;
+用SET @aa=0;  对@aa进行赋值
+在不用SET命令下，':='表示赋值，‘=’用作比较符，并且定义变量时前面必须加一个@，如：@a:=1;且@本身也在变量名中
+注释风格：以#字符开始到行尾，以 /* 序列开始到 */ 序列结束。该语句允许注释跨越多行。
+<=>空值安全的等号：这个操作符与 = 操作符执行相同的比较操作，不过在两个操作码均为 NULL 时，
+                 其返回至为 1 而不为 NULL，而当一个操作码为 NULL 时，其所得值为 0 而不为 NULL。
+XOR：逻辑XOR，当任意一个操作数为NULL时，返回值为NULL。
+		对于非NULL的操作数，假如有奇数个操作数为非零值，则计算所得结果为 1 ，否则为 0 。
+为了在检索中使用通配符，必须要用到LIKE操作符，LIKE的匹配要区分大小写
+通配符%表示任意字符出现了任意次（包含0次），不能匹配NULL，需要匹配的字符用一个单引号
+'_'通配一个任意字符
+MySQL中用正则表达式用操作符REGEXP，与LIKE的用发基本一致，正则匹配不区分大小写，如果非要区分则在字符前加操作符BINARY
+‘1000|2000’中的|为正则中的或
+'[1,2,3]tom'可以正则通配1tom或2tom或3tom,[]就是或的作用
+[1-9]正则通配1到9中的任意数[a-z]正则通配a到z的字符
+‘.’通配任意字符，\\为转义字符'\\.'则通配有‘.’的字符，对于非特殊字符\\是用来引用元字符的
+正则中\\f换页\\n换行\\r回车\\t制表\\v纵向制表
+字符类正则匹配放到了Word笔记中
+* 0个或多个匹配
++ 1个或多个匹配
+？ 0个或1个匹配
+{n}指定数目匹配
+{n,}不少于指定数目的匹配
+{n,m}匹配数目的范围
+正则定位匹配  '^ '文本的开始，‘$’文本的结尾，[[:<:]] 词的开始，[[:>:]]词的结尾  
+Concat(）拼接串如SELECT Concat(name,'(',sex,')')
+RTrim()函数去掉值右边的所有的空格
+LTrim()函数去掉值左边的所有的空格
+Trim()函数去掉串左右两边的空格
+
+IF(expr1,expr2,expr3)，如果expr1是TRUE(expr1 <> 0 and expr1 <> NULL)，则IF()的返回值为expr2; 否则返回值则为expr3。
+IFNULL(expr1,expr2)，假如expr1不为NULL，则IFNULL()的返回值为expr1否则其返回值为expr2，IFNULL()的返回值是否为数字或是字符串，具体情况取决于其所使用的语境。
+NULLIF(expr1,expr2)，如果expr1 = expr2成立，那么返回值为NULL，否则返回值为expr1。这和CASE WHEN expr1 = expr2 THEN NULL ELSE expr1 END语句的原理相同。
+聚集函数
+AVG()返回某列的平均值；COUNT()返回某列的行数，可*来数总行数，也可计数符合某一特征行的行数；MAX()返回某列的最大值；
+在计算列中值时默认对所有该列所有数据进行操作，即默认参数为ALL，还有一个参数为DISTINCT,在该参数下只对不同的
+值操作，只需在列名前加DISTINCT就可以改参数了。
+SELECT实际上可以对多个聚集函数进行操作
+	例如：SELECT COUNT(*) AS unm_items,
+		     MIN(prod_price) AS price_min,
+		     MAX(prod_price) AS price_max,
+		     AVG(prod_price) AS price_AVG
+		     FROM products;
+MIN()返回某列的最小值；SUM()返回某列值之和
+GROUP BY用于按照某列分组，该列名字相同则分在一组，GROUP BY字句必须出现在WHERE字句之后，FROM字句之后，ORDER BY之前
+WHERE是对每一行进行过滤，HAVING是对每个分组进行过滤，HAVING字句写在分组字句之后，WHERE和HAVING可以同时用
+两个表创建联结（对另一个表中出现与该表相同内容进行挂钩，则该表就不用再写）：SELECT出两个表中各自的一部分，用WHERE保证两个表的内容一一对应
+     例如：表biao1中有name,id,sex,表biao2中有id,scord,将两个表联结如下
+	SELECT name，id,sex,scord FROM biao1,biao2 WHERE biao1.id=biao2.id ORDER BY ID;
+联结还有一种语法,一般都用该方法联结
+	如：SELECT name，id,sex,scord FROM biao1 INSTER JOIN biao2 ON biao1.id=biao2.id;
+联结也可以联结多个表WHERE过滤条件用AND可以实现联结条件
+给表起别名：就是用AS语句
+外部联结：两个表联结时有一些数据并没有公共条件，但这些数据任用到外联结然要出现在联结后的表中，就要
+          正常联结：SELECT name，id,sex,scord FROM biao1 INSTER JOIN biao2 ON biao1.id=biao2.id;
+	  外联结：SELECT name，id,sex,scord FROM biao1 LEFT OUTER JOIN baio2 ON biao1.id=biao2.id;
+		外联结中包含biao1中，但biao2中没有对应数据的内容，就像biao1中是名字，biao2中是缴费，虽然有人没有缴费，但他们的名字任在联结表中
+联结中也可以用聚集函数GROUP BY ，该语句放在最后
+组合查询：就是用UNION将两组查询联合起来,对于显示的话，筛查条件重复行会变为一个
+	例如SELECT name，id,sex FROM biao1 INSTER JOIN biao2 ON biao1.id=biao2.id
+	    UNION
+	    SELECT name ，id，sex FROM biao2 INSTER JOIN biao3 ON biao2.id=biao3.id;
+要想所有行都显示（包含重复的行重复显示），用将UNION后添加 ALL 
+全文本搜索：全文本搜索是给搜索指定了需要搜索的列，不像正则匹配需要对所有数据进行搜索，这样提高了搜索效率，指定搜索
+	    列是在创建表的时候就会指定，CREATE TABLE 表名（.........,FULLTEXT(搜索范围的列名)）  不要在导入数据的
+	    时候使用FULLTEXT,而是等所有数据添加完了再用
+使用Match()和Against()函数进行全文本搜索，Match()指定被搜索的列，Against()指定要使用的搜索表达式，并且Match()确定的搜索范围必须与FULLTEXT中的范围完全一致（数量，名称和顺序）
+	使用格式如下SELECT id
+		    FROM  biao1
+		    WHERE Match(ID) Against('tom');
+布尔文本搜索：布尔文本搜索是在全文本搜索的基础上增加的对Against()函数增加条件，
+	如Against(‘tom -mom’IN BOOLEAN MODE)就是说有tom，但没有mom为检索条件，还有一些例如减号的全文本布尔操作符
+给表中插入一行数据 INSERT INTO 表名（列名.,.,..）VALUE(.....)；
+插入多行数据：INSERT INTO 表名（列名.,.,..）VALUE(.....),(.....),(.....),(.....);不过注意数据的顺序
+插入检索出的数据：INSERT INTO 表名（列名.,.,..）SELECT 列名... FROM 表名;注意数据和列名要一一对应别把顺序弄错了
+更新数据:UPDATE 表名
+	 SET 列名1=‘更新的数据’  ，列名2=‘更新的数据’
+	 WHERE 确定所在行的条件；
+删除某个列的值，可以设置他为NULL
+删除行：DELETE FROM 表名
+	WHERE 确定行的条件；
+表的主键可以在创建表的时候用PRIMARY KEY（列名）关键字指定，主键列中的名称必须唯一，它是挂钩的头
+主键可以在创建表时定义，也可以在创建之后定义
+创建表时可以给列设定默认值:列名 INT NOT NULL DEFAULT  默认值;
+创建表时后面更一个ENGINE=....
+	如：CREATE TABLE B1(ID INT ,NAME CHAR)ENGINE=InnoDB;
+InnoDB时引擎名，有多种引擎可以选择，这里不多说，注意，外键不能跨引擎，所以不要混用引擎，根据需求选择合适引擎
+ALTER TABLE 表名 ADD 列名 CHAR(20);   给表添加一列
+删除列：ALTER TABLE 表名 DROP COLUMN 列名;
+删除表 DROP TABLE 表名；
+重命名表 RENAME TABLE 表名1 TO 表名2；
+视图就是一个虚拟表,它相当于输出的一个模板
+创建视图：CREATE VIEW 视图名；  删除视图：DROP VIEW 视图名；
+使用视图：SHOW CREATE VIEW 视图名；  更新视图，如果不存在则新建视图：CREATE OR REPLAY VIEW
+确定模板格式CREATE VIEW 视图名 AS
+	    SELECT 列名，.... 
+	    FROM 表名
+	    WHERE 条件；
+引用视图就用FROM，与表是一样的
+数据库的存储过程功能就是一个执行多条语句的封装函数，也就是一个函数，调用函数的命令为CALL
+	如：CALL 存储过程名（@变量，@...）
+创建存储过程
+	CREATE PRICEDURE 存储过程名（）
+	BEGIN
+		函数语句
+	END;
+当创建函数的过程中防止误运行，在函数前面写DELIMITER//,意思是新的语句分割符为//,函数结束后写//,如：DELIMITER// 函数
+	//，用DELIMITER;来恢复分割符为；
+删除函数：DROP PROCEDURE 函数名；
+CREATE TABLE new_tbl LIKE orig_tbl;创建一个与已有表orig_tbl含有相应列属性和索引相同的另外一个空表new_tb1。
+CREATE TABLE new_tbl SELECT * FROM orig_tbl;完全克隆一个表的内容以及结构就可以使用语句
+DROP INDEX index_name ON tbl_name；DROP INDEX用于从表tbl_name中取消名称为index_name的索引。
