@@ -1,0 +1,381 @@
+基础操作
+print() 除了打印你提供的字符串之外，还会打印一个换行符，所以每调用一次 print() 就会换一次行，你可以通过 print() 的另一个参数 end 来替换这个换行符，就像下面这样：
+
+#!/usr/bin/env python3
+a, b = 0, 1
+while b < 100:
+    print(b, end=' ')
+    a, b = b, a + b
+print()
+结果1  1 2 3 5 8  13  21  34  55  89
+
+列表的元素不必是同一类型
+
+
+>>> range(1, 5)      
+range(1, 5)
+>>> list(range(1, 5))
+[1, 2, 3, 4]
+Python的步长放在后面，与MATLAB不同
+>>> list(range(1, 15, 3))
+[1, 4, 7, 10, 13]
+>>> list(range(4, 15, 2))
+[4, 6, 8, 10, 12, 14]
+
+a.append(45) 添加元素 45 到列表末尾
+
+有些时候我们需要将数据插入到列表的任何位置，这时我们可以使用列表的 insert() 方法。
+>>> a.insert(0, 1) # 在列表索引 0 位置添加元素 1
+
+列表方法 count(s) 会返回列表元素中 s 的数量
+
+如果你想要在列表中移除任意指定值，你需要使用 remove() 方法。
+>>> a.remove(234)
+
+现在我们反转整个列表。
+>>> a.reverse()
+
+怎样将一个列表的所有元素添加到另一个列表的末尾呢，可以使用列表的 extend() 方法。
+>>> b = [45, 56, 90]
+>>> a.extend(b) # 添加 b 的元素而不是 b 本身
+
+给列表排序，我们使用列表的 sort() 方法，排序的前提是列表的元素是可比较的。
+>>> a.sort()
+
+列表新方法 pop()。给一个参数 i 即 pop(i) 会将第 i 个元素弹出
+a
+[1, 2, 3, 4, 5, 6]
+>>> a.pop()
+6
+>>> a.pop()
+5
+>>> a.pop()
+4
+>>> a.pop()
+3
+>>> a
+[1, 2]
+
+squares = list(map(lambda x: x**2, range(10)))
+等价于下面的列表推导式。
+squares = [x**2 for x in range(10)]
+
+divmod（a，b）函数返回元组（a//b,a%b）
+divmod(15,2)
+结果(7, 1)
+
+元组是不可变类型，这意味着你不能在元组内删除或添加或编辑任何值。如果你尝试这些操作，将会出错
+
+要创建只含有一个元素的元组，元组可以不加小括号的，元组的代表是逗号，在值后面跟一个逗号
+>>> a = (123, )
+>>> b = 321,
+>>> a
+(123,)
+>>> b
+(321,)
+>>> type(a)
+<class 'tuple'>
+>>> type(b)
+<class 'tuple'>
+
+大括号或 set() 函数可以用来创建集合
+想要创建空集合，你必须使用 set() 而不是 {}。后者用于创建空字典
+
+元组是不可变类型，这意味着你不能在元组内删除或添加或编辑任何值。如果你尝试这些操作，将会出错：
+>>> a = (1, 2, 3, 4)
+>>> del a[0]
+Traceback (most recent call last):
+
+集合运算
+>>> a - b                              # a 有而 b 没有的字母
+{'r', 'd', 'b'}
+>>> a | b                              # 存在于 a 或 b 的字母
+{'a', 'c', 'r', 'd', 'b', 'm', 'z', 'l'}
+>>> a & b                              # a 和 b 都有的字母
+{'a', 'c'}
+>>> a ^ b                              # 存在于 a 或 b 但不同时存在的字母
+{'r', 'd', 'b', 'm', 'z', 'l'}
+
+字典中创建新的键值对很简单：
+>>> data['parthan'] = 'Ubuntu'
+
+dict() 可以从包含键值对的元组中创建字典。
+>>> dict((('Indian','Delhi'),('Bangladesh','Dhaka')))
+{'Indian': 'Delhi', 'Bangladesh': 'Dhaka'}
+
+如果你想要遍历一个字典，使用字典的 items() 方法。
+>>> data
+{'Kushal': 'Fedora', 'Jace': 'Mac', 'kart_': 'Debian', 'parthan': 'Ubuntu'}
+>>> for x, y in data.items():
+...     print("{} uses {}".format(x, y))
+...
+Kushal uses Fedora
+Jace uses Mac
+kart_ uses Debian
+parthan uses Ubuntu
+
+试图索引一个不存在的键将会抛出一个 keyError 错误。
+我们可以使用 dict.get(key, default) 来索引键，如果键不存在，那么返回指定的 default 值。
+
+如果你想要在遍历列表（或任何序列类型）的同时获得元素索引值，你可以使用 enumerate()。
+>>> for i, j in enumerate(['a', 'b', 'c']):
+...     print(i, j)
+...
+0 a
+1 b
+2 c
+
+>>> s = "Here is a line \
+... split in two lines"
+>>> s
+'Here is a line split in two lines'
+
+>>> s = "shi yan lou"
+>>> s.title()
+'Shi Yan Lou'
+
+有默认值的参数后面不能再有普通参数，比如 f(a,b=90,c) 就是错误的
+
+第二个是默认值只被赋值一次，因此如果默认值是任何可变对象时会有所不同，比如列表、字典或大多数类的实例。例如，下面的函数在后续调用过程中会累积（前面）传给它的参数:
+
+>>> def f(a, data=[]):
+...     data.append(a)
+...     return data
+...
+>>> print(f(1))
+[1]
+>>> print(f(2))
+[1, 2]
+>>> print(f(3))
+[1, 2, 3]
+要避免这个问题，你可以像下面这样
+>>> def f(a, data=None):
+...     if data is None:
+...         data = []
+...     data.append(a)
+...     return data
+...
+>>> print(f(1))
+[1]
+>>> print(f(2))
+[2]
+
+我们也能将函数的参数标记为只允许使用关键字参数。用户调用函数时将只能对每一个参数使用相应的关键字参数。
+
+>>> def hello(*, name='User'):
+...     print("Hello", name)
+...
+>>> hello('shiyanlou')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: hello() takes 0 positional arguments but 1 was given
+>>> hello(name='shiyanlou')
+Hello shiyanlou
+
+高阶函数（Higher-order function）或仿函数（functor）是内部至少含有一个以下步骤的函数：
+使用一个或多个函数作为参数
+返回另一个函数作为输出
+Python 里的任何函数都可以作为高阶函数。
+
+>>> def high(func, value):
+...     return func(value)
+...
+>>> lst = high(dir, int)
+>>> print(lst[-3:])
+['imag', 'numerator', 'real']
+
+文件
+open("路径")打开该路径的文件作为一个文件指针
+fobj = open("sample.txt")
+关闭文件fobj.close()
+使用 read() 方法一次性读取整个文件
+
+>>> fobj = open("sample.txt")
+>>> fobj.read()
+'I love Python\nI love shiyanlou\n'
+>>> fobj.close()
+
+如果你再一次调用 read()，它会返回空字符串因为它已经读取完整个文件。
+
+你可以循环遍历文件对象来读取文件中的每一行。
+>>> fobj = open('sample.txt')
+>>> for x in fobj:
+...     print(x, end = '')
+... 
+I love Python
+I love shiyanlou
+>>> fobj.close()
+
+让我们通过 write() 方法打开一个文件然后我们随便写入一些文本。
+>>> fobj = open("ircnicks.txt", 'w')
+>>> fobj.write('powerpork\n')
+>>> fobj.write('indrag\n')
+>>> fobj.write('mishti\n')
+>>> fobj.write('sankarshan')
+>>> fobj.close()
+
+重点函数sys.argvb，执行程序时输入的参数会被放到argv中argv[0]中存放程序文件本身，比如调用复制程序时./copyfile.py  1.txt   2.txt
+argv[1]中存放1.txt    ,argv[2]中放2.txt
+
+异常
+我们使用 try...except 块来处理任意异常。基本的语法像这样：
+try:
+    statements to be inside try clause
+    statement2
+    statement3
+    ...
+except ExceptionName:
+    statements to evaluated in case of ExceptionName happens
+它以如下方式工作：
+首先，执行 try 子句 （在 try 和 except 关键字之间的部分）。
+如果没有异常发生，except 子句 在 try 语句执行完毕后就被忽略了。
+如果在 try 子句执行过程中发生了异常，那么该子句其余的部分就会被忽略。
+如果异常匹配于 except 关键字后面指定的异常类型，就执行对应的 except 子句。然后继续执行 try 语句之后的代码。
+如果发生了一个异常，在 except 子句中没有与之匹配的分支，它就会传递到上一级 try 语句中。
+如果最终仍找不到对应的处理语句，它就成为一个 未处理异常，终止程序运行，显示提示信息。
+
+使用 raise 语句抛出一个异常。
+>>> raise ValueError("A value error happened.")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: A value error happened.
+我们可以捕获这些异常就像任何其它普通异常一样。
+>>> try:
+...     raise ValueError("A value error happened.")
+... except ValueError:
+...     print("ValueError in our code.")
+...
+ValueError in our code.
+
+使用 raise 语句抛出一个异常。
+
+>>> raise ValueError("A value error happened.")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: A value error happened.
+我们可以捕获这些异常就像任何其它普通异常一样。
+
+>>> try:
+...     raise ValueError("A value error happened.")
+... except ValueError:
+...     print("ValueError in our code.")
+...
+ValueError in our code.
+
+我们以下面这种方式定义类：
+class nameoftheclass(parent_class):
+    statement1
+    statement2
+    statement3
+在类的声明中你可以写任何 Python 语句，包括定义函数（在类中我们称为方法）。
+>>> class MyClass(object):
+...     """A simple example class"""
+...     i = 12345
+...     def f(self):
+...         return 'hello world'
+
+当一个类继承另一个类时，它将继承父类的所有功能（如变量和方法）。这有助于重用代码。
+#!/usr/bin/env python3
+class Person(object):
+    """
+    返回具有给定名称的 Person 对象
+    """
+    def __init__(self, name):
+        self.name = name
+    def get_details(self):
+        """
+        返回包含人名的字符串
+        """
+        return self.name
+class Student(Person):
+    """
+    返回 Student 对象，采用 name, branch, year 3 个参数
+    """
+    def __init__(self, name, branch, year):
+        Person.__init__(self, name)
+        self.branch = branch
+        self.year = year
+    def get_details(self):
+        """
+        返回包含学生具体信息的字符串
+        """
+        return "{} studies {} and is in {} year.".format(self.name, self.branch, self.year)
+class Teacher(Person):
+    """
+    返回 Teacher 对象，采用字符串列表作为参数
+    """
+    def __init__(self, name, papers):
+        Person.__init__(self, name)
+        self.papers = papers
+    def get_details(self):
+        return "{} teaches {}".format(self.name, ','.join(self.papers)
+person1 = Person('Sachin')
+student1 = Student('Kushal', 'CSE', 2005)
+teacher1 = Teacher('Prashad', ['C', 'C++'])
+print(person1.get_details())
+print(student1.get_details())
+print(teacher1.get_details())
+运行程序
+
+
+一个类可以继承自多个类，具有父类的所有变量和方法，语法如下：
+class MyClass(Parentclass1, Parentclass2,...):
+    def __init__(self):
+        Parentclass1.__init__(self)
+        Parentclass2.__init__(self)
+        ...
+        ...
+
+现在我们已经知道怎样创建对象，现在我们来看看怎样删除一个对象。我们使用关键字 del 来做到这个。
+>>> s = "I love you"
+>>> del s
+>>> s
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+NameError: name 's' is not defined
+
+模块
+.py文件可以作为一个模块，文件中是函数，调用模块以文件名（去掉.py）
+
+含有 __init__.py 文件的目录可以用来作为一个包，目录里的所有 .py 文件都是这个包的子模块，mymodule 是一个包名并且 bars 和 utils 是里面的两个子模块。你可以使用 touch 命令创建一个空的 __init__.py 文件。
+
+如果 __init__.py 文件内有一个名为 __all__ 的列表，那么只有在列表内列出的名字将会被公开。
+
+因此如果 mymodule 内的 __init__.py 文件含有以下内容：
+
+from mymodule.bars import simplebar
+__all__ = [simplebar, ]
+那么导入时将只有 simplebar 可用。
+
+os 模块
+getuid() 函数返回当前进程的有效用户 id。
+>>> os.getuid()
+
+getpid() 函数返回当前进程的 id。getppid() 返回父进程的 id。
+
+>>> os.getpid()
+16150
+>>> os.getppid()
+14847
+
+uname() 函数返回识别操作系统的不同信息，在 Linux 中它返回的详细信息可以从 uname -a 命令得到。uname() 返回的对象是一个元组，（sysname, nodename, release, version, machine）。
+>>> os.uname()
+('Linux', 'd80', '2.6.34.7-56.fc13.i686.PAE', '#1 SMP Wed Sep 15 03:27:15 UTC 2010', 'i686')
+
+getcwd() 函数返回当前工作目录。chdir(path) 则是更改当前目录到 path。在例子中我们首先看到当前工作目录是 /home/shiyanlou，然后我们更改当前工作目录到 /Code 并再一次查看当前工作目录。
+
+>>> os.getcwd()
+'/home/shiyanlou'
+>>> os.chdir('Code')
+>>> os.getcwd()
+'/home/shiyanlou/Code
+
+
+requests库
+你可以使用 get() 方法获取任意一个网页。
+>>> import requests
+>>> req = requests.get('http://www.baidu.com') 
+#非会员用户不能访问外网，所以请在学习的时候将url更换为 github.com 进行测试
+>>> req.status_code
+200
+
